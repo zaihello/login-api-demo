@@ -1,9 +1,15 @@
-POST http://localhost:3000/login
+# POST https://login-api-demo-dlw6.onrender.com/register
+# Content-Type: application/json
+
+# {
+#   "username": "qwe",
+#   "password": "789"
+# }
+
+POST https://login-api-demo-dlw6.onrender.com/login
 Content-Type: application/json
 
 {
-  "username": "abc",
-  "password": "1234"
+  "username": "qwe",
+  "password": "789"
 }
-
-
