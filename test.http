@@ -3,7 +3,7 @@
 
 # {
 #   "username": "qwe",
-#   "password": "789"
+#   "password": "1"
 # }
 
 POST https://login-api-demo-dlw6.onrender.com/login
@@ -11,5 +11,21 @@ Content-Type: application/json
 
 {
   "username": "qwe",
-  "password": "789"
+  "password": "1"
 }
+
+# POST  https://login-api-demo-dlw6.onrender.com/members
+# Content-Type: application/json
+
+# {
+#   "name": "Jolin",
+#   "year": "20"
+# }
+
+# GET  http://localhost:3000/members
+# Content-Type: application/json
+
+# {
+#   "name": "Jolin",
+#   "year": 22
+# }
