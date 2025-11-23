@@ -68,66 +68,52 @@ app.post('/login', async(req, res) => {
 //   res.json({ message: `API 運作正常！Hello ${req.user.username}` });
 // });
 
-// 會員資料（需要 Token）
+// 受保護的路由
 app.get('/profile', authMiddleware, (req, res) => {
   res.json({ message: '這是會員資料', user: req.user });
 });
 
-// ------------------------------
-// PostgreSQL 版本 CRUD: /members
-// ------------------------------
+// 啟動伺服器
+// app.listen(PORT, () => {
+//   console.log(`伺服器運行中，http://localhost:${PORT}`);
+// });
 
-app.get('/members', async (req, res) => {
-  try{
-    const result = await pool.query('SELECT * FROM members ORDER BY id ASC');
-    res.json({message:'取得成功',members:result.rows});
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'});
-  }  
+
+let members = [
+  {id:1,name:'John',year:15},
+  {id:2,name:'Jolin',year:18},
+]
+app.get('/members', (req, res) => {
+  res.json({message:'取得成功',members});
 });
-app.post('/members', async (req, res) => {
-  try{
-    const { name, year } = req.body;
+app.post('/members', (req, res) => {
+  const { name, year } = req.body;
   
-    const result = await pool.query(
-      'INSERT INTO members (name, year) VALUES ($1, $2) RETURNING *',
-      [name, year]
-    );
+  const newMember = {
+    id: Date.now(),
+    name,
+    year
+  };
 
-    res.json({ message: '新增成功', member: result.rows[0] });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'});
-  }
-  
+  members.push(newMember);
+  res.json({ message: '新增成功', member: newMember });
 });
-app.put('/members/:id', async (req, res) => {
-  try{
-    const id = Number(req.params.id);
-    const { name, year } = req.body;
+app.put('/members/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const { name, year } = req.body;
 
-    const result = await pool.query(
-      'UPDATE members SET name=$1, year=$2 WHERE id=$3 RETURNING *',
-      [name, year, id]
-    );
+  const member = members.find(p => p.id === id);
+  if (!member) return res.status(404).json({ message: '找不到會員' });
 
-    if (result.rows.length === 0) { 
-      return res.status(404).json({ message: '找不到會員' });
-    }  
+  member.name = name ?? member.name;
+  member.year = year ?? member.year;
 
-    res.json({ message: '更新成功', member:result.rows[0] });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'})
-  }
- 
+  res.json({ message: '更新成功', member });
 });
-app.delete('/members/:id', async (req, res) => {
-  try{
-    const id = Number(req.params.id);
-    await pool.query('DELETE FROM members WHERE id=$1', [id]);
-    res.json({ message: '刪除成功' });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'})
-  } 
+app.delete('/members/:id', (req, res) => {
+  const id = Number(req.params.id);
+  members = members.filter(p => p.id !== id);
+  res.json({ message: '刪除成功' });
 });
 
 

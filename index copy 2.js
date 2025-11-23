@@ -78,56 +78,38 @@ app.get('/profile', authMiddleware, (req, res) => {
 // ------------------------------
 
 app.get('/members', async (req, res) => {
-  try{
-    const result = await pool.query('SELECT * FROM members ORDER BY id ASC');
-    res.json({message:'取得成功',members:result.rows});
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'});
-  }  
+  const result = await pool.query('SELECT * FROM members ORDER BY id ASC');
+  res.json({message:'取得成功',members:result.rows});
 });
 app.post('/members', async (req, res) => {
-  try{
-    const { name, year } = req.body;
+  const { name, year } = req.body;
   
-    const result = await pool.query(
-      'INSERT INTO members (name, year) VALUES ($1, $2) RETURNING *',
-      [name, year]
-    );
+  const result = await pool.query(
+    'INSERT INTO members (name, year) VALUES ($1, $2) RETURNING *',
+    [name, year]
+  );
 
-    res.json({ message: '新增成功', member: result.rows[0] });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'});
-  }
-  
+  res.json({ message: '新增成功', member: result.rows[0] });
 });
 app.put('/members/:id', async (req, res) => {
-  try{
-    const id = Number(req.params.id);
-    const { name, year } = req.body;
+  const id = Number(req.params.id);
+  const { name, year } = req.body;
 
-    const result = await pool.query(
-      'UPDATE members SET name=$1, year=$2 WHERE id=$3 RETURNING *',
-      [name, year, id]
-    );
+  const result = await pool.query(
+    'UPDATE members SET name=$1, year=$2 WHERE id=$3 RETURNING *',
+    [name, year, id]
+  );
 
-    if (result.rows.length === 0) { 
-      return res.status(404).json({ message: '找不到會員' });
-    }  
+  if (result.rows.length === 0) { 
+    return res.status(404).json({ message: '找不到會員' });
+  }  
 
-    res.json({ message: '更新成功', member:result.rows[0] });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'})
-  }
- 
+  res.json({ message: '更新成功', member:result.rows[0] });
 });
 app.delete('/members/:id', async (req, res) => {
-  try{
-    const id = Number(req.params.id);
-    await pool.query('DELETE FROM members WHERE id=$1', [id]);
-    res.json({ message: '刪除成功' });
-  }catch(err){
-    res.status(500).json({error:'資料庫錯誤'})
-  } 
+  const id = Number(req.params.id);
+  await pool.query('DELETE FROM members WHERE id=$1', [id]);
+  res.json({ message: '刪除成功' });
 });
 
 

@@ -6,20 +6,20 @@
 #   "password": "1"
 # }
 
-POST https://login-api-demo-dlw6.onrender.com/login
-Content-Type: application/json
-
-{
-  "username": "qwe",
-  "password": "1"
-}
-
-# POST  https://login-api-demo-dlw6.onrender.com/members
+# POST https://login-api-demo-dlw6.onrender.com/login
 # Content-Type: application/json
 
 # {
-#   "name": "Jolin",
-#   "year": "20"
+#   "username": "qwe",
+#   "password": "1"
+# }
+
+GET https://login-api-demo-dlw6.onrender.com/members
+# Content-Type: application/json
+
+# {
+#   "name": "Mary",
+#   "year": "27"
 # }
 
 # GET  http://localhost:3000/members
